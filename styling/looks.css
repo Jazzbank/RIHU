@@ -8,6 +8,11 @@
     src: url("fonts/cmunrm.ttf") format('truetype');
 }
 
+* {
+    font-family: "CMU Sans Serif";
+    font-size: 16px;
+}
+
 body {
     background-color: rgb(7, 7, 7);
     margin: auto;
@@ -35,6 +40,9 @@ body {
     padding: 10px;
 }
 
-.lapBtn:hover {
-    cursor: pointer;
+#formula {
+    display: table;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
 }

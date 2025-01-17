@@ -8,21 +8,23 @@
     </head>
 
     <body>
-        <div id="topSection" style="min-width: 500px; min-height: 100px; margin: auto;">
+        <div id="topSection" style="min-width: 500px; min-height: 80px; margin: auto;">
             You have <span id="points">0</span> points.<br>
-            You are gaining <span id="pointGen">0</span> points/sec.<br>
-            <br>
-            <span id="formula"></span>
+            You are gaining <span id="pointGen">0</span> points/sec.         
         </div>
-        <br>
-        <br>
-        <div id="mainTab" style="margin: auto; width: 900px; height: 600px; display: flex;">
-            <div id="lapUpgrades" style="width: 300px; height: 600px; overflow-y: scroll">
+        
+        <div id="mainTab">
+            <span id="formula" style="display: table; margin: 0 auto; text-align: center; color: white;"></span>
+            <br>
+            <div style="margin: auto; width: 900px; height: 600px; display: flex;">
+                <div id="lapUpgrades" style="width: 300px; height: 600px; overflow-y: scroll">
+                </div>
+    
+                <div id="mainCanvasDiv" style="width: 600px; height: 600px;">
+                    <canvas id="mainCanvas"></canvas>
+                </div>
             </div>
-
-            <div id="mainCanvasDiv" style="width: 600px; height: 600px;">
-                <canvas id="mainCanvas"></canvas>
-            </div>
+            
         </div>
 
         <!-- LIBRARIES -->
