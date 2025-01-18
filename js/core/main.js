@@ -27,7 +27,7 @@ function loadData() {
 
     if (player.hyp == 1) {
         let initRingPrices = Array.from({length: RINGS}, (_, x) => (x == 0) ? 10 : 1000/15 * Math.pow(15, x))
-        let initRingSpeeds = Array.from({length: RINGS}, (_, x) => Math.max(0.7 - 0.02 * x, 0.1))
+        let initRingSpeeds = Array.from({length: RINGS}, (_, x) => Math.max(5 - 0.015 * x, 0.1))
         let initRingEffects = Array.from({length: RINGS}, (_, x) => Math.pow(10, x))
         let initPriceScalings = Array.from({length: RINGS}, (_, x) => 1.25 + x * 0.05)
         let initLevelBases = Array.from({length: RINGS}, (_, x) => Math.max(0.05 - 0.01 * x, 0.01))
@@ -272,14 +272,16 @@ function mainLoop() {
         let ringData = player[`r${i + 1}`]
 
         if (ringData.unlocked) {
+            console.log("Hello!")
             ringData.laps = ringData.laps + ringData.speed / FPS
 
-            if (ringData.laps >= ringData.lapsCeil) {
+            if (ringData.laps > ringData.lapsCeil) {
                 let frameLaps = Math.floor(ringData.laps - ringData.lapsCeil) + 1
+                ringData.lapsCeil = Math.ceil(ringData.laps)
                 revComplete(i + 1, frameLaps)
             }
 
-            ringData.lapsCeil = Math.ceil(ringData.laps)
+            
         }
     }
 
@@ -288,5 +290,4 @@ function mainLoop() {
 window.setInterval(function() {
     mainLoop()
     update()
-
 }, 1000/FPS)
