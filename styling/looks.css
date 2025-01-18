@@ -37,6 +37,7 @@ body {
     border-radius: 5px;
     transition-duration: 200ms;
     padding: 10px;
+    display: none
 }
 
 #formula {
@@ -45,4 +46,10 @@ body {
     text-align: center;
     color: white;
     font-size: 16px;
+}
+
+.locked {
+    color: #cfcfcf;
+    background-color: #131313;
+    cursor: not-allowed;
 }

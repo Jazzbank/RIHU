@@ -20,27 +20,14 @@ function loadData() {
     // For now, the game has no saving.
 
     for (let i = 0; i < RINGS; i++) {
-        document.getElementById("lapUpgrades").innerHTML += `<button class="lapBtn" id="lapBtn${i + 1}" onclick="upgradeCircle(${i})" style="color: ${arcColors[i]}; border-color: ${arcColors[i]}; background-color: ${arcColorsSec[i]}; display: none"><span style="font-size: 24px;">Circle ${i + 1} [Level <span id="lap${i + 1}Level">y</span>]</span><br>Lap speed: <span id="lapBtn${i + 1}Current">x</span> → <span id="lapBtn${i + 1}Next">y</span><br>Costs <span id="lapBtn${i + 1}Cost">z</span> points</button>`
+        document.getElementById("lapUpgrades").innerHTML += `<button class="lapBtn" id="lapBtn${i + 1}" onclick="upgradeCircle(${i})" style="color: ${arcColors[i]}; border-color: ${arcColors[i]}; background-color: ${arcColorsSec[i]};"><span style="font-size: 24px;">Circle ${i + 1} [Level <span id="lap${i + 1}Level">y</span>]</span><br>Lap speed: <span id="lapBtn${i + 1}Current">x</span> → <span id="lapBtn${i + 1}Next">y</span><br>Costs <span id="lapBtn${i + 1}Cost">z</span> points</button>`
     }
 
     let lapBtns = document.getElementsByClassName("lapBtn")
-    
-    for (let i = 0; i < lapBtns.length; i++) {
-        lapBtns[i].addEventListener("mouseenter", (e) => {
-            e.target.style.color = arcColorsSec[i]
-            e.target.style.cursor = "pointer"
-            e.target.style.backgroundColor = arcColorsTer[i]
-        })
-
-        lapBtns[i].addEventListener("mouseleave", (e) => {
-            e.target.style.color = arcColors[i]
-            e.target.style.backgroundColor = arcColorsSec[i]
-        })
-    }
 
     if (player.hyp == 1) {
         let initRingPrices = Array.from({length: RINGS}, (_, x) => (x == 0) ? 10 : 1000/15 * Math.pow(15, x))
-        let initRingSpeeds = Array.from({length: RINGS}, (_, x) => Math.max(0.2 - 0.02 * x, 0.1))
+        let initRingSpeeds = Array.from({length: RINGS}, (_, x) => Math.max(0.7 - 0.02 * x, 0.1))
         let initRingEffects = Array.from({length: RINGS}, (_, x) => Math.pow(10, x))
         let initPriceScalings = Array.from({length: RINGS}, (_, x) => 1.25 + x * 0.05)
         let initLevelBases = Array.from({length: RINGS}, (_, x) => Math.max(0.05 - 0.01 * x, 0.01))
@@ -64,9 +51,27 @@ function loadData() {
                     effect: 0,
                     unlocked: (i == 0) ? true : false,
                     unlockedUpgrade: (i == 0) ? true : false,
+                    buttonStyle: `color: ${arcColors[i]}; border-color: ${arcColors[i]}; background-color: ${arcColorsSec[i]};`,
                 }}
             )
         }
+    }
+
+    for (let i = 0; i < lapBtns.length; i++) {
+        lapBtns[i].addEventListener("mouseenter", (e) => {
+            if (player.points >= player[`r${i + 1}`].price) {
+                e.target.style.color = arcColorsSec[i]
+                e.target.style.cursor = "pointer"
+                e.target.style.backgroundColor = arcColorsTer[i]
+            }
+        })
+
+        lapBtns[i].addEventListener("mouseleave", (e) => {
+            if (player.points >= player[`r${i + 1}`].price) {
+                e.target.style.color = arcColors[i]
+                e.target.style.backgroundColor = arcColorsSec[i]
+            }
+        })
     }
 }
 
@@ -205,6 +210,7 @@ function update() {
     
     for (let i = 0; i < RINGS; i++) {
         let ringData = player[`r${i + 1}`]
+
         if (player.hyp == 1) {
             player[`r${i + 1}`].effect = (player[`r${i + 1}`].lapsCeil - 1) * player[`r${i + 1}`].effectBase
         }
@@ -234,6 +240,18 @@ function update() {
         }
 
         if (ringData.unlockedUpgrade) {
+            if (player.points < ringData.price) {
+                if (!document.getElementById("lapBtn" + (i + 1)).classList.contains("locked")) {
+                    document.getElementById("lapBtn" + (i + 1)).classList.add("locked")
+                    document.getElementById("lapBtn" + (i + 1)).style.cssText = ""
+                }
+            } else {
+                if (document.getElementById("lapBtn" + (i + 1)).classList.contains("locked")) {
+                    document.getElementById("lapBtn" + (i + 1)).classList.remove("locked")
+                    document.getElementById("lapBtn" + (i + 1)).style.cssText = ringData.buttonStyle
+                }
+            }
+
             if (document.getElementById("lapBtn" + (i + 1)).style.display != "revert") {
                 document.getElementById("lapBtn" + (i + 1)).style.display = "revert";
             }
