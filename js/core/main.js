@@ -28,6 +28,7 @@ function loadData() {
     for (let i = 0; i < lapBtns.length; i++) {
         lapBtns[i].addEventListener("mouseenter", (e) => {
             e.target.style.color = arcColorsSec[i]
+            e.target.style.cursor = "pointer"
             e.target.style.backgroundColor = arcColorsTer[i]
         })
 
@@ -38,13 +39,13 @@ function loadData() {
     }
 
     if (player.hyp == 1) {
-        let initRingPrices = Array.from({length: RINGS}, (_, x) => (x == 0) ? 10 : 50 * Math.pow(20, x))
+        let initRingPrices = Array.from({length: RINGS}, (_, x) => (x == 0) ? 10 : 1000/15 * Math.pow(15, x))
         let initRingSpeeds = Array.from({length: RINGS}, (_, x) => Math.max(0.2 - 0.02 * x, 0.1))
         let initRingEffects = Array.from({length: RINGS}, (_, x) => Math.pow(10, x))
         let initPriceScalings = Array.from({length: RINGS}, (_, x) => 1.25 + x * 0.05)
         let initLevelBases = Array.from({length: RINGS}, (_, x) => Math.max(0.05 - 0.01 * x, 0.01))
 
-        Object.assign(player, {points: 0})
+        Object.assign(player, {points: 0, pPoints: 0}) // pPoints - Prestige points
 
         for (let i = 0; i < RINGS; i++) {
             Object.assign(player, 
@@ -113,7 +114,7 @@ function pointGen() {
     return new ExpantaNum(effectSum * lapsSum)
 }
 
-function revComplete(ring) {
+function revComplete(ring, mult) {
     if (player.hyp == 1) {
         var effectSum = 0
 
@@ -125,7 +126,7 @@ function revComplete(ring) {
             }
         }
 
-        player.points += effectSum
+        player.points += effectSum * mult
     }
 }
 
@@ -210,9 +211,9 @@ function update() {
 
         if (ringData.unlocked) {
             c.beginPath()
-            c.arc(mainCanvas.width / 2, mainCanvas.height / 2, 35+35*i, 0, (ringData.laps) % 1 * 2 * Math.PI, false)
+            c.arc(mainCanvas.width / 2, mainCanvas.height / 2, 35+35*i, -0.25 * 2 * Math.PI, ((ringData.laps) % 1 - 0.25) * 2 * Math.PI, false)
             c.strokeStyle = arcColors[i]
-            c.lineWidth = 25
+            c.lineWidth = 20
             c.stroke()
 
             player[`r${i + 1}`].speed = ringData.speedInit + ringData.level * ringData.levelBase, 2
@@ -256,7 +257,8 @@ function mainLoop() {
             ringData.laps = ringData.laps + ringData.speed / FPS
 
             if (ringData.laps >= ringData.lapsCeil) {
-                revComplete(i + 1)
+                let frameLaps = Math.floor(ringData.laps - ringData.lapsCeil) + 1
+                revComplete(i + 1, frameLaps)
             }
 
             ringData.lapsCeil = Math.ceil(ringData.laps)
