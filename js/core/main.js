@@ -32,8 +32,25 @@ function loadData() {
         let initPriceScalings = Array.from({length: RINGS}, (_, x) => 1.3 + x * 0.05)
         let initLevelBases = Array.from({length: RINGS}, (_, x) => Math.max(0.1 - 0.015 * x, 0.01))
 
-        Object.assign(player, {points: 0, pPoints: 0, delta: Date.now()}) // pPoints - Prestige points
+        let prestigeUpgrades = [
+            // [desc, price, bought]. id corresponds to p{row}{column}
+            ["Double all laps/sec.", ],
+            ["Triple all ring multipliers."],
+            ["Boost ring multiplie based<br>on laps this prestige.<br>1 + 0.0001x"],
+            [""]
+        ]
 
+        Object.assign(player, {points: 0, prestige: {
+            points: 0,
+            unlocked: false,
+            upgrades: {
+                cols: 3,
+                rows: 3,
+                rowMults: [2, 10, 100] // By how much the same upgrades in a row increase by
+            }
+        }, delta: Date.now()}) // pPoints - Prestige points (soon...)
+        // Every 5 levels, 1.3x boost to laps/sec?
+        
         for (let i = 0; i < RINGS; i++) {
             Object.assign(player, 
                 {["r" + (i+1)]: {
