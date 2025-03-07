@@ -33,11 +33,16 @@ function loadData() {
         let initLevelBases = Array.from({length: RINGS}, (_, x) => Math.max(0.1 - 0.015 * x, 0.01))
 
         let prestigeUpgrades = [
-            // [desc, price, bought]. id corresponds to p{row}{column}
-            ["Double all laps/sec.", ],
-            ["Triple all ring multipliers."],
-            ["Boost ring multiplie based<br>on laps this prestige.<br>1 + 0.0001x"],
-            [""]
+            // . id corresponds to p{row}{column}
+            "Triple all laps/sec.",
+            "Triple all ring multipliers.",
+            "Boost ring multiplier based<br>on laps this prestige.<br>1 + 0.0001x",
+            "Placeholder",
+            "Placeholder",
+            "Placeholder",
+            "Placeholder",
+            "Placeholder",
+            "Placeholder"
         ]
 
         Object.assign(player, {points: 0, prestige: {
@@ -46,7 +51,8 @@ function loadData() {
             upgrades: {
                 cols: 3,
                 rows: 3,
-                rowMults: [2, 10, 100] // By how much the same upgrades in a row increase by
+                rowMults: [2, 5, 10], // By how much the same upgrades in a row increase by
+                rowPrices: [1, 10, 100000]
             }
         }, delta: Date.now()}) // pPoints - Prestige points (soon...)
         // Every 5 levels, 1.3x boost to laps/sec?
@@ -273,8 +279,8 @@ function update() {
                 document.getElementById("lapBtn" + (i + 1)).style.display = "revert";
             }
 
-            document.getElementById("lapBtn" + (i + 1) + "Current").innerHTML = formatNormal(ringData.speed, 2)
-            document.getElementById("lapBtn" + (i + 1) + "Next").innerHTML = formatNormal(ringData.speed + ringData.levelBase, 2)
+            document.getElementById("lapBtn" + (i + 1) + "Current").innerHTML = formatNormal(ringData.speed, 2) + "/sec"
+            document.getElementById("lapBtn" + (i + 1) + "Next").innerHTML = formatNormal(ringData.speed + ringData.levelBase, 2) + "/sec"
             document.getElementById("lapBtn" + (i + 1) + "Cost").innerHTML = formatNormal(ringData.price, 2)
             document.getElementById("lap" + (i + 1) + "Level").innerHTML = ringData.level
         }
